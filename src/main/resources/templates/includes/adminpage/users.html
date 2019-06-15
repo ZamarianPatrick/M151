@@ -1,0 +1,75 @@
+<div id="admin-body" th:fragment="body" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="table-wrapper">
+        <div class="table-title">
+            <div class="row">
+                <div class="col-sm-6 tenth-size">
+                    <h2>Benutzer</h2>
+                </div>
+                <div class="col-sm-6 input-small">
+                    <input type="text" onkeyup="filter('table-users', this, 1, false)" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" placeholder="Suche nach Benutzer">
+                </div>
+                <div class="col-sm-6 input-small">
+                    <input type="text" onkeyup="filter('table-users', this, 2, false)" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" placeholder="Suche nach Vorname">
+                </div>
+                <div class="col-sm-6 input-small">
+                    <input type="text" onkeyup="filter('table-users', this, 3, false)" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" placeholder="Suche nach Nachname">
+                </div>
+                <div class="col-sm-6 input-small">
+                    <select class="form-control" onchange="filter('table-users', this, 4, true)">
+                        <option>Alle</option>
+                        <option th:each="value : ${T(ch.patrick.shop.model.CustomerType).all()}" th:text="${value.getNameTag()}" th:value="${value}"></option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <form method="post" th:object="${changeUsers}">
+            <table class="table table-striped table-hover" id="table-users">
+                <thead>
+                <tr>
+                    <th class="th-sm">
+                        <span  alphabetic style="cursor:pointer" onclick="sortTable(this.parentElement.parentElement.parentElement.parentElement, 0, this)">
+                            ID <span class="glyphicon glyphicon-resize-vertical"></span>
+                        </span>
+                    </th>
+                    <th class="th-sm">
+                        <span alphabetic style="cursor:pointer" onclick="sortTable(this.parentElement.parentElement.parentElement.parentElement, 1, this)">
+                            Benutzername <span class="glyphicon glyphicon-resize-vertical"></span>
+                        </span>
+                    </th>
+                    <th class="th-sm">
+                        <span alphabetic style="cursor:pointer" onclick="sortTable(this.parentElement.parentElement.parentElement.parentElement, 2, this)">
+                            Vorname <span class="glyphicon glyphicon-resize-vertical"></span>
+                        </span></th>
+                    <th class="th-sm">
+                        <span alphabetic style="cursor:pointer" onclick="sortTable(this.parentElement.parentElement.parentElement.parentElement, 3, this)">
+                            Nachname <span class="glyphicon glyphicon-resize-vertical"></span>
+                        </span>
+                    </th>
+                    <th class="th-sm">
+                        <span alphabetic style="cursor:pointer" onclick="sortTable(this.parentElement.parentElement.parentElement.parentElement, 4, this)">
+                            Funktion <span class="glyphicon glyphicon-resize-vertical"></span>
+                        </span>
+                    </th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="user, itemStat : ${users}">
+                    <td th:text="${user.id}"></td>
+                    <td th:text="${user.username}"></td>
+                    <td th:text="${user.firstname}"></td>
+                    <td th:text="${user.surname}"></td>
+                    <td style="width: 180px;">
+                        <input type="hidden" th:field="*{requests[__${itemStat.index}__].id}">
+                        <div class="col-sm-6 full-size">
+                            <select class="form-control" th:field="*{requests[__${itemStat.index}__].group}">
+                                <option th:each="value : ${T(ch.patrick.shop.model.CustomerType).all()}" th:value="${value}" th:text="${value.getNameTag()}"></option>
+                            </select>
+                        </div>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+            <input type="submit" name="submit" value="Daten speichern" class="btn btn-primary">
+        </form>
+    </div>
+</div>

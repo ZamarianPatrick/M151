@@ -1,0 +1,144 @@
+<div th:fragment="content" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div th:if="${user == null}" class="container container-middle">
+        <div class="panel panel-default">
+            <div class="panel-heading">Fehler!</div>
+            <div class="panel-body">
+                <p>Du musst dich anmelden, um deine persönlichen Informationen abrufen zu können!</p>
+                <a class="btn btn-primary" href="/login" role="button">Login</a>
+            </div>
+        </div>
+    </div>
+    <div th:if="${user != null}" class="container container-middle">
+        <div class="table-wrapper">
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-6 full-size">
+                        <h2>Meine persönlichen Informationen:</h2>
+                    </div>
+                </div>
+            </div>
+            <table class="table table-striped table-hover">
+                <tbody>
+                <tr>
+                    <th>Benutzername</th>
+                    <td th:text="${user.getUsername()}"></td>
+                </tr>
+                <tr>
+                    <th>Vorname</th>
+                    <td th:text="${user.getFirstname()}"></td>
+                </tr>
+                <tr>
+                    <th>Nachname</th>
+                    <td th:text="${user.getSurname()}"></td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td th:text="${user.getEmail()}"></td>
+                </tr>
+                <tr>
+                    <th>Telefon Nummer</th>
+                    <td th:text="${user.getTelephonNumber()}"></td>
+                </tr>
+                <tr>
+                    <th>Strasse</th>
+                    <td th:text="${user.getAddress().getStreet()}"></td>
+                </tr>
+                <tr>
+                    <th>PLZ</th>
+                    <td th:text="${user.getAddress().getCity().getZip()}"></td>
+                </tr>
+                <tr>
+                    <th>Ort</th>
+                    <td th:text="${user.getAddress().getCity().getName()}"></td>
+                </tr>
+                </tbody>
+            </table>
+            <div class="panel-group" style="max-width: 30%; min-width: 200px;" id="edit-bord">
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#edit-bord" href="#edit-name">Name ändern</a>
+                        </h4>
+                    </div>
+                    <div id="edit-name" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <form method="post" th:action="@{/userInfo/changeName}" th:object="${changeName}">
+                                <div class="form-group">
+                                    <label for="firstname">Vorname</label>
+                                    <input type="text" class="form-control" id="firstname" th:field="*{firstname}" placeholder="Vorname" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="surname">Nachname</label>
+                                    <input type="text" class="form-control" id="surname" th:field="*{surname}" placeholder="Nachname" required>
+                                </div>
+                                <input type="submit" name="submit" value="Speichern" class="btn btn-primary">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#edit-bord" href="#edit-email">E-mail ändern</a>
+                        </h4>
+                    </div>
+                    <div id="edit-email" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <form method="post" th:object="${changeEmail}" th:action="@{/userInfo/changeEmail}">
+                                <div class="form-group">
+                                    <label for="email">E-Mail Adresse</label>
+                                    <input type="email" class="form-control" id="email" th:field="*{email}" placeholder="E-Mail Adresse" required>
+                                </div>
+                                <input type="submit" name="submit" value="Speichern" class="btn btn-primary">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#edit-bord" href="#edit-tel">Telefonnummer ändern</a>
+                        </h4>
+                    </div>
+                    <div id="edit-tel" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <form method="post" th:object="${changeTel}" th:action="@{/userInfo/changeTel}">
+                                <div class="form-group">
+                                    <label for="tel">Telefon*</label>
+                                    <input type="text" class="form-control" id="tel" th:field="*{number}" placeholder="Telefonnummer" required>
+                                </div>
+                                <input type="submit" name="submit" value="Speichern" class="btn btn-primary">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel panel-default">
+                    <div class="panel-heading">
+                        <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#edit-bord" href="#edit-address">Adresse ändern</a>
+                        </h4>
+                    </div>
+                    <div id="edit-address" class="panel-collapse collapse">
+                        <div class="panel-body">
+                            <form method="post" th:object="${changeAddress}" th:action="@{/userInfo/changeAddress}">
+                                <div class="form-group">
+                                    <label for="street">Adresse</label>
+                                    <input type="text" class="form-control" id="street" th:field="*{street}" placeholder="Strasse und Nummer" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="zip">Postleitzahl</label>
+                                    <input type="text" class="form-control" id="zip" th:field="*{zip}" placeholder="Postleitzahl" maxlength="5" pattern="[0-9]*" oninvalid="setCustomValidity('Bitte nur Zahlen eingeben')" oninput="setCustomValidity('')"  required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="city">Ort</label>
+                                    <input type="text" class="form-control" id="city" th:field="*{city}" placeholder="Ort" required>
+                                </div>
+                                <input type="submit" name="submit" value="Speichern" class="btn btn-primary">
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

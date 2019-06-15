@@ -1,0 +1,18 @@
+<div th:fragment="content" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="container container-middle">
+        <div class="table-wrapper">
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-6 half-size">
+                        <h2>Artikel</h2>
+                    </div>
+                </div>
+            </div>
+            <div th:each="article : ${articles}" class="article-container">
+                <h3 th:text="${article.name}"></h3>
+                <img th:src="'/images/icons/' + ${article.icon}" th:alt="${article.icon}" class="big-icon">
+                <p>Preis: <strong th:text="${article.price} + ' Fr.-'"></strong></p>
+            </div>
+        </div>
+    </div>
+</div>

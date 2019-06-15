@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+</head>
+<body>
+    <div id="header" th:fragment="header">
+        <nav class="navbar navbar-default navbar-inverse" role="navigation">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#nav-toggled-elements">
+                        <span class="sr-only">Toggle navigation</span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="/home">HappyWriter</a>
+                </div>
+
+                <div class="collapse navbar-collapse" id="nav-toggled-elements">
+                    <ul class="nav navbar-nav">
+                        <li th:classappend="${side == 'home'} ? active"><a href="/home">Startseite</a></li>
+                        <li th:classappend="${side == 'articles'} ? active"><a href="/articles">Artikel</a></li>
+                        <li th:if="${user != null}" th:classappend="${side == 'order'} ? active"><a href="/order">Bestellung</a></li>
+                        <li th:if="${user != null AND user.getCustomerType() == T(ch.patrick.shop.model.CustomerType).ADMIN}" th:classappend="${side == 'admin'} ? active"><a href="/admin">Administration</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li th:if="${user != null}" class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b th:text="${user.getUsername()}"></b><span class="caret"></span></a>
+                            <ul id="user-dp" class="dropdown-menu">
+                                <li>
+                                    <a href="/userInfo">Meine Daten</a>
+                                </li>
+                                <li>
+                                    <a href="/order/info">Meine Bestellungen</a>
+                                </li>
+                                <li>
+                                    <a href="/logout">Logout</a>
+                                </li>
+                            </ul>
+                        </li>
+                        <li th:if="${user == null}" class="dropdown">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown"><b>Login</b> <span class="caret"></span></a>
+                            <ul id="login-dp" class="dropdown-menu">
+                                <li>
+                                    <div class="row">
+                                        <div class="col-md-12">
+                                            <form th:if="${user == null}" class="form" role="form" method="post" th:action="@{/login}" th:object="${loginRequest}" accept-charset="UTF-8" id="login-nav">
+                                                <div class="form-group">
+                                                    <label class="sr-only" for="user">Email Addresse</label>
+                                                    <input type="text" class="form-control" id="user" th:field="*{user}" placeholder="Email oder Benutzer" required>
+                                                </div>
+                                                <div class="form-group">
+                                                    <label class="sr-only" for="password">Passwort</label>
+                                                    <input type="password" class="form-control" id="password" th:field="*{password}" placeholder="Passwort" required>
+                                                    <div class="help-block text-right"><a href="/recover">Passwort vergessen?</a></div>
+                                                </div>
+                                                <div class="form-group">
+                                                    <button type="submit" class="btn btn-primary btn-block">Anmelden</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="bottom text-center">
+                                            Noch kein Konto? <a href="/register"><b>zur Registration</b></a>
+                                        </div>
+                                    </div>
+                                </li>
+                            </ul>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+</body>
+</html>

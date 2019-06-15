@@ -1,0 +1,77 @@
+<div th:fragment="content" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="container container-middle">
+        <div class="table-wrapper">
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-6 half-size">
+                        <h2 th:text="${order} ? 'Bitte die Bestellung überprüfen' : 'Fehler!'"></h2>
+                    </div>
+                    <div th:if="${order}" class="col-sm-6 half-size">
+                        <a href="/order/submit" class="btn btn-success"><span>Bestellung abschicken</span></a>
+                        <a href="/order/destroy" class="btn btn-danger"><span>Bestellung löschen</span></a>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${order == null}">
+                <p>Du musst dich anmelden, um eine Bestellung machen zu können!</p>
+                <a class="btn btn-primary" href="/login" role="button">Login</a>
+            </div>
+            <div th:if="${order}">
+                <h3>Bestellung</h3>
+                <table class="table table-striped table-hover" id="table-articles">
+                    <thead>
+                    <tr>
+                        <td>Artikel</td>
+                        <td>Preis Inhalt</td>
+                        <td>Preis total</td>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr th:each="orderPosition, iterate : ${order.getOrderPositions()}">
+                        <td th:text="${orderPosition.article.name}"></td>
+                        <td th:text="${orderPosition.getItemsPrice()}"></td>
+                        <td th:text="${orderPosition.getPrice()}"></td>
+                    </tr>
+                    <tr>
+                        <td colspan="2"><strong>Totalpreis</strong></td>
+                        <td th:text="${order.getPrice()}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+                <h3>Persönliche Informationen</h3>
+                <table class="table table-striped table-hover">
+                    <tbody>
+                    <tr>
+                        <th>Vorname</th>
+                        <td th:text="${user.getFirstname()}"></td>
+                    </tr>
+                    <tr>
+                        <th>Nachname</th>
+                        <td th:text="${user.getSurname()}"></td>
+                    </tr>
+                    <tr>
+                        <th>Email</th>
+                        <td th:text="${user.getEmail()}"></td>
+                    </tr>
+                    <tr>
+                        <th>Telefon Nummer</th>
+                        <td th:text="${user.getTelephonNumber()}"></td>
+                    </tr>
+                    <tr>
+                        <th>Strasse</th>
+                        <td th:text="${user.getAddress().getStreet()}"></td>
+                    </tr>
+                    <tr>
+                        <th>PLZ</th>
+                        <td th:text="${user.getAddress().getCity().getZip()}"></td>
+                    </tr>
+                    <tr>
+                        <th>Ort</th>
+                        <td th:text="${user.getAddress().getCity().getName()}"></td>
+                    </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>

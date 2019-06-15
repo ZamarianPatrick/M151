@@ -1,0 +1,29 @@
+<div id="admin-body" th:fragment="body" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="table-wrapper">
+        <div class="table-title">
+            <h2>Icons bearbeiten</h2>
+        </div>
+        <h3>Bilder hochladen</h3>
+        <form action="/admin/icons/upload" method="post" enctype="multipart/form-data">
+            <input type="file" name="pic" accept="image/*" required>
+            <input type="submit">
+        </form>
+        <h3>Bilder bearbeiten</h3>
+        <table class="table table-striped table-hover">
+            <thead>
+                <tr>
+                    <th>Icon</th>
+                    <th>Name</th>
+                    <th>Aktion</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="file : ${files}">
+                    <td><img th:src="'/images/icons/' + ${file}" th:alt="${file}" class="small-icon"></td>
+                    <td th:text="${file}"></td>
+                    <td><a th:href="'/admin/icons/delete?file-name=' + ${file}" class="btn btn-primary" role="button" style="color: white">Löschen</a></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>

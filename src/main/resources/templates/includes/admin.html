@@ -1,0 +1,14 @@
+<div th:fragment="content" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div th:if="${user == null OR user.getCustomerType() != T(ch.patrick.shop.model.CustomerType).ADMIN}" class="container container-middle">
+        <div class="table-wrapper">
+            <div class="table-title"><h2>Fehler!</h2></div>
+            <p>Du hast keine Berechtigung um diese Seite abzurufen!</p>
+        </div>
+    </div>
+    <div th:if="${user != null AND user.getCustomerType() == T(ch.patrick.shop.model.CustomerType).ADMIN}">
+        <div class="container">
+            <div th:replace="/includes/adminpage/header :: header"></div>
+            <div th:replace="'/includes/adminpage/' + ${adminContent} :: body"></div>
+        </div>
+    </div>
+</div>

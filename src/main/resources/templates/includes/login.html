@@ -1,0 +1,38 @@
+<div th:fragment="content" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="container container-small">
+        <div class="table-wrapper">
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-6 full-size">
+                        <h2>Login</h2>
+                    </div>
+                </div>
+            </div>
+            <div th:if="${failed}" class="alert alert-danger alert-dismissible show">
+                <strong>Fehler!</strong> Das Passwort oder der Benutzername ist falsch!
+                <button type="button" class="close" data-dismiss="alert">&times;</button>
+            </div>
+            <div class="half-size" style="margin: auto;">
+                <div class="col-md-12">
+                    <form class="form" role="form" method="post" th:action="@{/login}" th:object="${loginRequest}" accept-charset="UTF-8" id="login-nav">
+                        <div class="form-group">
+                            <label class="sr-only" for="user">Email Addresse</label>
+                            <input type="text" class="form-control" id="user" th:field="*{user}" placeholder="Email oder Benutzer" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="sr-only" for="password">Passwort</label>
+                            <input type="password" class="form-control" id="password" th:field="*{password}" placeholder="Passwort" required>
+                            <div class="help-block text-right"><a href="/recover">Passwort vergessen?</a></div>
+                        </div>
+                        <div class="form-group">
+                            <button type="submit" class="btn btn-primary btn-block">Anmelden</button>
+                        </div>
+                    </form>
+                </div>
+                <div class="bottom text-center">
+                    Noch kein Konto? <a href="/register"><b>zur Registration</b></a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,60 @@
+<div th:fragment="content" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div id="form-register" class="container container-small">
+        <div class="table-wrapper">
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-6 full-size">
+                        <h2>Neues Benutzerkonto erstellen</h2>
+                    </div>
+                </div>
+            </div>
+            <form method="post" id="register" th:action="@{/register}" th:object="${customer}">
+                <div class="form-group">
+                    <div th:if="${userAlreadyExists}" class="alert alert-danger alert-dismissible show">
+                        <strong>Fehler!</strong> Der Benutzername ist bereits vergeben!
+                        <button type="button" class="close" data-dismiss="alert">&times;</button>
+                    </div>
+                    <label for="username">Benutzername*</label>
+                    <input type="text" class="form-control" id="username" th:field="*{username}" placeholder="Benutzername" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">Passwort*</label>
+                    <input type="password" class="form-control" id="password" th:field="*{password}" placeholder="Passwort" minlength="8" required>
+                </div>
+                <div class="form-group">
+                    <label for="firstname">Vorname*</label>
+                    <input type="text" class="form-control" id="firstname" th:field="*{firstname}" placeholder="Vorname" required>
+                </div>
+                <div class="form-group">
+                    <label for="surname">Nachname*</label>
+                    <input type="text" class="form-control" id="surname" th:field="*{surname}" placeholder="Nachname" required>
+                </div>
+                <div class="form-group">
+                    <label for="street">Adresse*</label>
+                    <input type="text" class="form-control" id="street" th:field="*{address.street}" placeholder="Strasse und Nummer" required>
+                </div>
+                <div class="form-group">
+                    <label for="zip">Postleitzahl*</label>
+                    <input type="text" class="form-control" id="zip" th:field="*{address.city.zip}" placeholder="Postleitzahl" maxlength="5" pattern="[0-9]*" oninvalid="setCustomValidity('Bitte nur Zahlen eingeben')" oninput="setCustomValidity('')"  required>
+                </div>
+                <div class="form-group">
+                    <label for="city">Ort*</label>
+                    <input type="text" class="form-control" id="city" th:field="*{address.city.name}" placeholder="Ort" required>
+                </div>
+                <div class="form-group">
+                    <label for="tel">Telefon*</label>
+                    <input type="text" class="form-control" id="tel" th:field="*{telephonNumber}" placeholder="Telefonnummer" required>
+                </div>
+                <div th:if="${emailAlreadyExists}" class="alert alert-danger alert-dismissible show">
+                    <strong>Fehler!</strong> Die E-Mail ist bereits vergeben!
+                    <button type="button" class="close" data-dismiss="alert">&times;</button>
+                </div>
+                <div class="form-group">
+                    <label for="email">E-Mail Adresse*</label>
+                    <input type="email" class="form-control" id="email" th:field="*{email}" placeholder="E-Mail Adresse" required>
+                </div>
+                <input type="submit" name="submit" value="Konto erstellen" class="btn btn-primary">
+            </form>
+        </div>
+    </div>
+</div>

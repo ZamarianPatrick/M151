@@ -1,0 +1,27 @@
+<div th:fragment="content" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="container container-middle">
+        <div class="table-wrapper">
+            <div class="table-title">
+                <div class="row">
+                    <div class="col-sm-6 full-size">
+                        <h2>Artikel bearbeiten</h2>
+                    </div>
+                </div>
+            </div>
+            <form th:if="${editOrderPosition}" method="post" action="/order/edit" th:object="${editOrderPosition}">
+                <div>
+                    <label>Mögliche Inhalte</label>
+                    <div>
+                        <input type="hidden" th:field="*{index}">
+                        <select th:field="*{selectedContents}" multiple="multiple" id="package-select">
+                            <option th:each="item : ${editOrderPosition.article.availableItems}" th:value="${item.id}" th:text="${item.name}"
+                                    th:if="${item instanceof T(ch.patrick.shop.model.Article)} == false"
+                                    th:attrappend="selected=${editOrderPosition.selectedContents.contains(item.id) ? 'true' : null}"></option>
+                        </select>
+                    </div>
+                </div>
+                <input type="submit" class="btn btn-success" value="Speichern">
+            </form>
+        </div>
+    </div>
+</div>

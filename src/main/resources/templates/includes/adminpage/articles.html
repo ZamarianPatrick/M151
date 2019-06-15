@@ -1,0 +1,194 @@
+<div id="admin-body" th:fragment="body" xmlns:th="http://www.w3.org/1999/xhtml">
+    <div class="table-wrapper">
+        <div class="table-title">
+            <div class="row">
+                <div class="col-sm-6 tenth-size">
+                    <h2>Artikel</h2>
+                </div>
+                <div class="col-sm-6 quarter-size">
+                    <input type="text" onkeyup="filter('table-articles', this, 3, false)" class="form-control" aria-label="Small" aria-describedby="inputGroup-sizing-sm" placeholder="Suche nach Artikel">
+                </div>
+                <div class="col-sm-6 quarter-size">
+                    <select class="form-control" onchange="filter('table-articles', this, 5, false)">
+                        <option value="Alle">Alle</option>
+                        <option value="Verpackung">Verpackungen</option>
+                        <option value="Inhalt">Inhalte</option>
+                    </select>
+                </div>
+                <div class="col-sm-6" style="width: 40%;">
+                    <a href="#addArticleModal" class="btn btn-success" data-toggle="modal"><i class="material-icons">&#xE147;</i> <span>Artikel hinzufügen</span></a>
+                    <a href="#deleteArticleModal" class="btn btn-danger" data-toggle="modal" onclick="deleteArticles()"><i class="material-icons">&#xE15C;</i> <span>Markierte löschen</span></a>
+                </div>
+            </div>
+        </div>
+        <table class="table table-striped table-hover" id="table-articles">
+            <thead>
+            <tr>
+                <th>
+                    <span class="custom-checkbox">
+                        <input type="checkbox" id="selectAll">
+                        <label for="selectAll"></label>
+                    </span>
+                </th>
+                <th>
+                    Icon
+                </th>
+                <th>
+                    <span alphabetic style="cursor:pointer" onclick="sortTable(this.parentElement.parentElement.parentElement.parentElement, 2, this)">
+                        ID <span class="glyphicon glyphicon-resize-vertical"></span>
+                    </span>
+                </th>
+                <th class="th-sm">
+                    <span alphabetic style="cursor:pointer" onclick="sortTable(this.parentElement.parentElement.parentElement.parentElement, 3, this)">
+                        Artikel <span class="glyphicon glyphicon-resize-vertical"></span>
+                    </span></th>
+                <th>
+                    <span alphabetic style="cursor:pointer" onclick="sortTable(this.parentElement.parentElement.parentElement.parentElement, 4, this)">
+                        Preis <span class="glyphicon glyphicon-resize-vertical"></span>
+                    </span>
+                </th>
+                <th>
+                    <span alphabetic style="cursor:pointer" onclick="sortTable(this.parentElement.parentElement.parentElement.parentElement, 5, this)">
+                        Artikeltyp <span class="glyphicon glyphicon-resize-vertical"></span>
+                    </span>
+                </th>
+                <th>
+                    Aktionen
+                </th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="article : ${articles}">
+                <td>
+                    <span class="custom-checkbox">
+                        <input type="checkbox" th:id="'checkbox' + ${article.id}" name="options[]" value="1">
+                        <label th:for="'checkbox' + ${article.id}"></label>
+                    </span>
+                </td>
+                <td th:icon-name="${article.icon}"><img th:src="'/images/icons/' + ${article.icon}" th:alt="${article.icon}" class="small-icon"> </td>
+                <td th:text="${article.id}"></td>
+                <td th:text="${article.name}"></td>
+                <td th:text="${article.price}"></td>
+                <td th:text="${article instanceof T(ch.patrick.shop.model.Article)} ? Verpackung : Inhalt"></td>
+                <td th:if="${article instanceof T(ch.patrick.shop.model.Article)}" hidden>
+                    <span th:each="availableItem : ${article.availableItems}" th:text="${availableItem.id}"></span>
+                </td>
+                <td>
+                    <a href="#editArticleModal" class="edit" data-toggle="modal" onclick="editArticle(this.parentElement.parentElement)"><i class="material-icons" data-toggle="tooltip" title="Edit">&#xE254;</i></a>
+                    <a href="#deleteArticleModal" th:onclick="|deleteArticle(${article.id})|" class="delete" data-toggle="modal"><i class="material-icons" data-toggle="tooltip" title="Delete">&#xE872;</i></a>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <div id="addArticleModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post" th:action="@{/admin/articles/add}" th:object="${addArticleRequest}">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Artikel hinzufügen</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <div class="form-group">
+                            <label>Bild Link</label>
+                            <input type="text" class="form-control" th:field="*{icon}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Artikelname</label>
+                            <input type="text" class="form-control" th:field="*{name}" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Preis</label>
+                            <input type="number" step="0.01" class="form-control" th:field="*{price}" required>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="check-package" onclick="addArticlePackage(this, 'available-items-select')" th:field="*{isPackage}">
+                            <label class="form-check-label" for="check-package">Verpackung</label>
+                        </div>
+                        <div id="available-items-select" hidden>
+                            <label>Mögliche Inhalte</label>
+                            <div id="package-hidden">
+                                <select th:field="*{{availableItems}}" multiple="multiple" id="package-hidden-select">
+                                    <option th:each="article : ${articles}" th:value="${article.id}" th:text="${article.name}" th:if="${article instanceof T(ch.patrick.shop.model.Article)} == false"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="reset" class="btn btn-default" data-dismiss="modal" value="Abbrechen">
+                        <input type="submit" class="btn btn-success" value="Hinzufügen">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="editArticleModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post" th:action="@{/admin/articles/edit}" th:object="${editArticleRequest}">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Artikel bearbeiten</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <input type="hidden" th:field="*{id}" id="article-edit-id">
+                        <div class="form-group">
+                            <label>Bild Link</label>
+                            <input type="text" class="form-control" th:field="*{icon}" id="article-edit-icon" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Artikelname</label>
+                            <input type="text" class="form-control" th:field="*{name}" id="article-edit-name" required>
+                        </div>
+                        <div class="form-group">
+                            <label>Preis</label>
+                            <input type="number" step="0.01" class="form-control" th:field="*{price}" id="article-edit-price" required>
+                        </div>
+                        <div class="form-check">
+                            <input type="checkbox" class="form-check-input" id="article-edit-isPackage" onclick="addArticlePackage(this, 'available-items-select-edit')" th:field="*{isPackage}">
+                            <label class="form-check-label" for="check-package">Verpackung</label>
+                        </div>
+                        <div id="available-items-select-edit" hidden>
+                            <label>Mögliche Inhalte</label>
+                            <div id="package-hidden-edit">
+                                <select th:field="*{availableItems}" multiple="multiple" id="package-hidden-select-edit">
+                                    <option th:each="article : ${articles}" th:value="${article.id}" th:text="${article.name}" th:if="${article instanceof T(ch.patrick.shop.model.Article)} == false"></option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="reset" class="btn btn-default" data-dismiss="modal" value="Abbrechen">
+                        <input type="submit" class="btn btn-success" value="Speichern">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="deleteArticleModal" class="modal fade">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form method="post" action="/admin/articles/delete">
+                    <div class="modal-header">
+                        <h4 class="modal-title">Artikel löschen</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Bist du sicher das du die gewählten Artikel löschen möchtest?</p>
+                        <p class="text-warning"><small>Diese Aktion kann nicht rückgängig gemacht werden!</small></p>
+                        <div id="deleting-items">
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <input type="button" class="btn btn-default" data-dismiss="modal" value="Abbrechen">
+                        <input type="submit" class="btn btn-danger" value="Löschen">
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
